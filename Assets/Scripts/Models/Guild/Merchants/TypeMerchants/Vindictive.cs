@@ -12,34 +12,37 @@ public sealed class Vindictive : Merchant
 
     public override void MakeDeal(Merchant merchant, int numberTransactions)
     {
-        bool honestCooperation = _isHonestCooperation;
-
-        if (_errorProbability < 6)
-            honestCooperation = !honestCooperation;
-
-        if (honestCooperation && merchant.IsHonestCooperation)
+        for (int i = 0; i < numberTransactions; ++i)
         {
-            _bank.AddValue(4);
-            GetBank(merchant).AddValue(4);
-        }
-        else if (honestCooperation && !merchant.IsHonestCooperation)
-        {
-            _bank.AddValue(1);
-            GetBank(merchant).AddValue(5);
+            bool honestCooperation = _isHonestCooperation;
 
-            _isHonestCooperation = false;
-        }
-        else if (!honestCooperation && merchant.IsHonestCooperation)
-        {
-            _bank.AddValue(5);
-            GetBank(merchant).AddValue(1);
-        }
-        else if (!honestCooperation && !merchant.IsHonestCooperation)
-        {
-            _bank.AddValue(2);
-            GetBank(merchant).AddValue(2);
+            if (_errorProbability < 6)
+                honestCooperation = !honestCooperation;
 
-            _isHonestCooperation = false;
+            if (honestCooperation && merchant.IsHonestCooperation)
+            {
+                _bank.AddValue(4);
+                GetBank(merchant).AddValue(4);
+            }
+            else if (honestCooperation && !merchant.IsHonestCooperation)
+            {
+                _bank.AddValue(1);
+                GetBank(merchant).AddValue(5);
+
+                _isHonestCooperation = false;
+            }
+            else if (!honestCooperation && merchant.IsHonestCooperation)
+            {
+                _bank.AddValue(5);
+                GetBank(merchant).AddValue(1);
+            }
+            else if (!honestCooperation && !merchant.IsHonestCooperation)
+            {
+                _bank.AddValue(2);
+                GetBank(merchant).AddValue(2);
+
+                _isHonestCooperation = false;
+            }
         }
     }
 }

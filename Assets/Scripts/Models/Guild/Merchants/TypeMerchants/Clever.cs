@@ -15,48 +15,53 @@ public sealed class Clever : Merchant
 
     public override void MakeDeal(Merchant merchant, int numberTransactions)
     {
-        SetSequence();
-
-        bool honestCooperation = _isHonestCooperation;
-
-        if (_errorProbability < 6)
-            honestCooperation = !honestCooperation;
-
-        if (honestCooperation && merchant.IsHonestCooperation)
+        for (int i = 0; i < numberTransactions; i++)
         {
-            _bank.AddValue(4);
-            GetBank(merchant).AddValue(4);
-        }
-        else if (honestCooperation && !merchant.IsHonestCooperation)
-        {
-            _bank.AddValue(1);
-            GetBank(merchant).AddValue(5);
+            SetSequence();
 
-            if (_transactionCounter < 5)
+            bool honestCooperation = _isHonestCooperation;
+
+            if (_errorProbability < 6)
+                honestCooperation = !honestCooperation;
+
+            if (honestCooperation && merchant.IsHonestCooperation)
             {
-                MerchantCheated();
+                _bank.AddValue(4);
+                GetBank(merchant).AddValue(4);
             }
-        }
-        else if (!honestCooperation && merchant.IsHonestCooperation)
-        {
-            _bank.AddValue(5);
-            GetBank(merchant).AddValue(1);
-        }
-        else if (!honestCooperation && !merchant.IsHonestCooperation)
-        {
-            _bank.AddValue(2);
-            GetBank(merchant).AddValue(2);
-
-            if (_transactionCounter < 5)
+            else if (honestCooperation && !merchant.IsHonestCooperation)
             {
-                MerchantCheated();
+                _bank.AddValue(1);
+                GetBank(merchant).AddValue(5);
+
+                if (_transactionCounter < 5)
+                {
+                    MerchantCheated();
+                }
             }
+            else if (!honestCooperation && merchant.IsHonestCooperation)
+            {
+                _bank.AddValue(5);
+                GetBank(merchant).AddValue(1);
+            }
+            else if (!honestCooperation && !merchant.IsHonestCooperation)
+            {
+                _bank.AddValue(2);
+                GetBank(merchant).AddValue(2);
+
+                if (_transactionCounter < 5)
+                {
+                    MerchantCheated();
+                }
+            }
+
+            if (_transactionCounter >= 5 && !_IsCheating)
+                _isHonestCooperation = merchant.IsHonestCooperation;
+
+            _transactionCounter++;
         }
 
-        if (_transactionCounter >= 5 && !_IsCheating)
-            _isHonestCooperation = merchant.IsHonestCooperation;
-
-        _transactionCounter++;
+        _transactionCounter = 0;
     }
 
     private void SetSequence()
